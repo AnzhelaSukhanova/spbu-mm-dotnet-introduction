@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace Homework2
@@ -23,13 +22,14 @@ namespace Homework2
             var exprList = new List<Expression> {
                 Expression.IfThenElse(
                     Expression.Equal(parameter, Expression.Constant(null, elemType)),
-                    Expression.Return(returnTarget, Expression.Constant(null, typeof(R))),
+                    Expression.Return(returnTarget, Expression.Constant(default(R), typeof(R))),
                     Expression.Assign(current, parameter)
                 )
             };
 
-            foreach (int index in indices)
+            for (int i = 0; i < indices.Length; i++)
             {
+                int index = indices[i];
                 Type elemGenericType = elemType.GetGenericTypeDefinition();
 
                 if (!elemGenericType.Equals(typeof(Collection<>)) &&
@@ -42,13 +42,23 @@ namespace Homework2
                      "Item", Expression.Constant(index));
 
                 elemType = item.Type;
-                exprList.Add(
-                    Expression.IfThenElse(
-                        Expression.Equal(item, Expression.Constant(null, elemType)),
-                        Expression.Return(returnTarget, Expression.Constant(null, typeof(R))),
-                        Expression.Assign(current, item)
-                    )
-                );
+
+                // traversing the chain of collections
+                if (i < indices.Length - 1)
+                {
+                    exprList.Add(
+                        Expression.IfThenElse(
+                            Expression.Equal(item, Expression.Constant(null, elemType)),
+                            Expression.Return(returnTarget, Expression.Constant(default(R), typeof(R))),
+                            Expression.Assign(current, item)
+                        )
+                    );
+                }
+                // got to the final element, don't need to check for nullability
+                else
+                {
+                    exprList.Add(Expression.Assign(current, Expression.Convert(item, typeof(object))));
+                }
             }
 
             exprList.Add(Expression.Label(returnTarget, Expression.Convert(current, elemType)));

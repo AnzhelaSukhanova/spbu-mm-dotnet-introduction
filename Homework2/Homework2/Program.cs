@@ -7,11 +7,13 @@ namespace Homework2
     {
         static void Main(string[] args)
         {
-            var l = new Collection<Collection<string>> { new Collection<string> {"abc"}, null, null };
-            //l = null;
+            var coll = new Collection<Collection<int>> {
+                new Collection<int> { 1, 2 }, null, null
+            };
             var ind = new int[] { 0, 0 };
-
-            Console.WriteLine(NullConditionalOperator.AccessElement<Collection<string>, string>(l, ind));
+          
+            // equal to coll?.[0]?.[0]
+            Console.WriteLine(NullConditionalOperator.AccessElement<Collection<int>, int>(coll, ind));
         }
     }
 }
