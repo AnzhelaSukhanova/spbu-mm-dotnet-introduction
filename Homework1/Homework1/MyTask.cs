@@ -10,6 +10,7 @@ namespace Homework1
         private TResult _result;
         private Exception _exception;
         private volatile MyTaskState _state = MyTaskState.CREATED;
+        private ManualResetEvent _waitHandle = new ManualResetEvent(false);
 
         public TResult Result
         {
@@ -18,7 +19,7 @@ namespace Homework1
                 while (_state == MyTaskState.CREATED || _state == MyTaskState.RUNNING)
                 {
                     // wait until completed
-                    Thread.Sleep(10);
+                    _waitHandle.WaitOne();
                 }
 
                 if (_state == MyTaskState.FAILED)
@@ -49,15 +50,17 @@ namespace Homework1
             {
                 _state = MyTaskState.RUNNING;
                 _result = _func();
+                _state = MyTaskState.COMPLETED;
             }
             catch (Exception exception)
             {
                 _exception = exception;
                 _state = MyTaskState.FAILED;
-                return;
             }
-
-            _state = MyTaskState.COMPLETED;
+            finally
+            {
+                _waitHandle.Set();
+            }
         }
         
         public IMyTask<TNewResult> ContinueWith<TNewResult>(Func<TResult, TNewResult> func)
