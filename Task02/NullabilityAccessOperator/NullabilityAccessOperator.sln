@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32002.261
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NullabilityAccessOperator", "NullabilityAccessOperator.csproj", "{F99AB39F-3D3E-4ABE-BE3A-8603BD0931E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "..\Tests\Tests.csproj", "{0E2DE8D2-6B89-4683-846B-9967C930F681}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F99AB39F-3D3E-4ABE-BE3A-8603BD0931E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F99AB39F-3D3E-4ABE-BE3A-8603BD0931E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F99AB39F-3D3E-4ABE-BE3A-8603BD0931E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F99AB39F-3D3E-4ABE-BE3A-8603BD0931E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E2DE8D2-6B89-4683-846B-9967C930F681}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E2DE8D2-6B89-4683-846B-9967C930F681}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E2DE8D2-6B89-4683-846B-9967C930F681}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E2DE8D2-6B89-4683-846B-9967C930F681}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {30C7FC99-539C-45FF-83D4-76A1729020C0}
+	EndGlobalSection
+EndGlobal
