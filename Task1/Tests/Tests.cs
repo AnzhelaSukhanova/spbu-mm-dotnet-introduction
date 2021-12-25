@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Collections.Generic;
 using NUnit.Framework;
-using Main;
+using Lib;
 
 namespace Tests
 {
@@ -10,7 +10,7 @@ namespace Tests
         [Test]
         public static void NoTask()
         {
-            var tp = new Main.ThreadPool(3);
+            var tp = new Lib.ThreadPool(3);
             tp.Dispose();
             Assert.IsTrue(tp.IsStopped(10000));
         }
@@ -18,7 +18,7 @@ namespace Tests
         [Test]
         public static void OneTask()
         {
-            var tp = new Main.ThreadPool(3);
+            var tp = new Lib.ThreadPool(3);
             var t = new SmpTask<object>(() => {
                 Thread.Sleep(3000);
                 return null;
@@ -31,7 +31,7 @@ namespace Tests
         [Test]
         public static void TaskWithException()
         {
-            var tp = new Main.ThreadPool(3);
+            var tp = new Lib.ThreadPool(3);
             var t = new SmpTask<object>(() => {
                 Thread.Sleep(500);
                 throw new System.Exception("Something went wrong...");
@@ -44,7 +44,7 @@ namespace Tests
         [Test]
         public static void ManyTasks()
         {
-            var tp = new Main.ThreadPool(3);
+            var tp = new Lib.ThreadPool(3);
             for (int i = 0; i < 42; i++)
             {
                 tp.Enqueue(new SmpTask<object>(() => {
@@ -59,16 +59,16 @@ namespace Tests
         [Test]
         public static void TasksWithContinuation1()
         {
-            var tp = new Main.ThreadPool(3);
-            var ts1 = new List<SmpTask<object>> {
+            var tp = new Lib.ThreadPool(3);
+            var ts1 = new List<IMyTask<object>> {
                 new SmpTask<object>(() => 10),
                 new SmpTask<object>(() => { Thread.Sleep(50); return 20; }),
                 new SmpTask<object>(() => { Thread.Sleep(100); return 30; })};
-            var ts2 = new List<CntTask<object, object>>();
+            var ts2 = new List<IMyTask<object, object>>();
             ts1.ForEach((task) => {
-                ts2.Add(new CntTask<object, object>((x) => (int)x + 1, task));
-                ts2.Add(new CntTask<object, object>((x) => { Thread.Sleep(50); return (int)x + 2; }, task));
-                ts2.Add(new CntTask<object, object>((x) => { Thread.Sleep(100); return (int)x + 3; }, task));
+                ts2.Add(task.ContinueWith<object>((x) => (int)x + 1));
+                ts2.Add(task.ContinueWith<object>((x) => { Thread.Sleep(50); return (int)x + 2; }));
+                ts2.Add(task.ContinueWith<object>((x) => { Thread.Sleep(100); return (int)x + 3; }));
             });
             ts1.ForEach((task) => tp.Enqueue(task));
             ts2.ForEach((task) => tp.Enqueue(task));
@@ -79,16 +79,16 @@ namespace Tests
         [Test]
         public static void TasksWithContinuation2()
         {
-            var tp = new Main.ThreadPool(3);
+            var tp = new Lib.ThreadPool(3);
             IMyTask<object> ts = new SmpTask<object>(() => 1);
             tp.Enqueue(ts);
-            ts = new CntTask<object, object>((x) => { Thread.Sleep(100); return 2; }, ts);
+            ts = ts.ContinueWith<object>((x) => { Thread.Sleep(100); return 2; });
             tp.Enqueue(ts);
-            ts = new CntTask<object, object>((x) => { Thread.Sleep(50); return (int)x * 7; }, ts);
+            ts = ts.ContinueWith<object>((x) => { Thread.Sleep(50); return (int)x * 7; });
             tp.Enqueue(ts);
-            ts = new CntTask<object, object>((x) => "x = " + ((int)x).ToString(), ts);
+            ts = ts.ContinueWith<object>((x) => "x = " + ((int)x).ToString());
             tp.Enqueue(ts);
-            ts = new CntTask<object, object>((x) => { Thread.Sleep(100); return ((string)x).Length; }, ts);
+            ts = ts.ContinueWith<object>((x) => { Thread.Sleep(100); return ((string)x).Length; });
             tp.Enqueue(ts);
             tp.Dispose();
             Assert.IsTrue(tp.IsStopped(10000));

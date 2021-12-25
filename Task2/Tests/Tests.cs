@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using NUnit.Framework;
-using Main;
+using Lib;
 
 namespace Tests
 {

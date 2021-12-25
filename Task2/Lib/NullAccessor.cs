@@ -2,24 +2,8 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace Main
+namespace Lib
 {
-    public interface IAccessField { }
-
-    public class Index : IAccessField
-    {
-        public int Value;
-
-        public Index(int index) { Value = index; }
-    }
-
-    public class Field : IAccessField
-    {
-        public string Name;
-
-        public Field(string name) { Name = name; }
-    }
-
     public static class NullAccessor
     {
         private static Expression GetField(IAccessField field, ParameterExpression resultVar, ref Type resultType, BlockExpression returnNull)
@@ -93,10 +77,5 @@ namespace Main
                 param);
             return func.Compile();
         }
-    }
-
-    public static class Program
-    {
-        public static void Main() { }
     }
 }
