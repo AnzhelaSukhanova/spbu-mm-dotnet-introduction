@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace NullabilityAccessOperator {
     public static class NullabilityAccess {
-
         public static object GetFromArray<T>(T array, IList<int> indices) {
             if (indices == null || indices.Count == 0) {
                 throw new ArgumentException("Indices must be not null and have at list one index");
