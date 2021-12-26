@@ -4,15 +4,11 @@ using System.Threading;
 
 namespace MyThreading {
     public class ThreadPool: IDisposable {
-        #region Fields
-
         private object _lockObj = new object();
         private Queue<Thread> _threads;
         private Queue<IMyTask> _tasks;
         private CancellationTokenSource _cancelTokenSource;
         private CancellationToken _cancelToken;
-
-        #endregion
 
         public ThreadPool(int threadsNum) {
             _cancelTokenSource = new CancellationTokenSource();
